@@ -1,0 +1,42 @@
+{
+    "name": "beta/bx.model.ext",
+    "description": "Extended model",
+    "type": "bitrix-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexander Nesterov",
+            "email": "alex19pov31@gmail.com"
+        }
+    ],
+    "autoload": {
+        "classmap": ["lib/"]
+    },
+    "autoload-dev": {
+        "classmap": ["tests/Stubs"],
+        "psr-4": {
+            "Bx\\Model\\Ext\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "require": {
+        "beta/bx.model": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "beta/data.provider": "^1.2",
+        "beta/bx.data.provider": "^1.4"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:beta-eto-code/data.provider.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:beta-eto-code/bx.data.provider.git"
+        }
+    ]
+}

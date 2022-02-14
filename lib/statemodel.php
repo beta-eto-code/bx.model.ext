@@ -118,7 +118,7 @@ class StateModel extends ModelDecorator
     public function loadLastState()
     {
         foreach ($this->stateStorage as $offset => $state) {
-            while($state->key() > 0) {
+            while($state->key() < ($state->count() - 1)) {
                 $this->loadNextState($offset);
             }
         }
@@ -150,7 +150,7 @@ class StateModel extends ModelDecorator
      */
     public function getChangesData(): array
     {
-        $resutl = [];
+        $result = [];
         foreach($this->stateStorage as $key => $state) {
             $value = $this->offsetGet($key);
             if ($value !== $state->bottom()) {

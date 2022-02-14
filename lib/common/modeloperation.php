@@ -34,6 +34,10 @@ class ModelOperation implements ModelOperationInterface
      * @var string
      */
     private $pkName;
+    /**
+     * @var UserContextInterface|null
+     */
+    private $userContext;
 
     private function __construct(
         ModelServiceInterface $service, 
@@ -88,7 +92,7 @@ class ModelOperation implements ModelOperationInterface
         return new static($service, ModelOperationInterface::REMOVE_OPERATION, null, '', $pkValue);
     }
 
-    public function setUserConstext(?UserContextInterface $userContext)
+    public function setUserContext(?UserContextInterface $userContext)
     {
         $this->userContext = $userContext;
     }
@@ -147,10 +151,10 @@ class ModelOperation implements ModelOperationInterface
         }
 
         if (in_array($this->operationType, [ModelOperationInterface::CREATE_OPERATION, ModelOperationInterface::UPDATE_OPERATION])) {
-            return $this->result = $this->modelService->save($this->model);
+            return $this->result = $this->modelService->save($this->model, $this->userContext);
         }
 
-        return $this->result = $this->modelService->delete($this->pkValue);
+        return $this->result = $this->modelService->delete($this->pkValue, $this->userContext);
     }
 
     /**
@@ -193,7 +197,7 @@ class ModelOperation implements ModelOperationInterface
         return null;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return [
             'operation' => $this->operationType,

@@ -2,10 +2,10 @@
 
 namespace Bx\Model\Ext\Interfaces;
 
-use Bitrix\Main\Result;
 use Bx\Model\AbsOptimizedModel;
 use Bx\Model\Interfaces\CollectionItemInterface;
 use Bx\Model\Interfaces\ModelServiceInterface;
+use Bx\Model\Interfaces\UserContextInterface;
 
 interface ModelOperationInterface extends CollectionItemInterface, CommitableInterface
 {
@@ -17,6 +17,12 @@ interface ModelOperationInterface extends CollectionItemInterface, CommitableInt
      * @return string
      */
     public function getOperationType(): string;
+
+    /**
+     * @param UserContextInterface|null $userContext
+     * @return void
+     */
+    public function setUserContext(?UserContextInterface $userContext);
 
     /**
      * @return bool

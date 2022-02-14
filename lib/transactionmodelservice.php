@@ -86,9 +86,11 @@ class TransactionModelService extends ServiceDecorator
     {
         if (empty($model[$this->pkName])) {
             $operation = $this->operationHolder->addOperationCreate($model, $this->modelService, $this->pkName);
+            $operation->setUserContext($userContext);
             return new TransactionResult($operation);
         } else if($model->isChanged()) {
             $operation = $this->operationHolder->addOperationUpdate($model, $this->modelService, $this->pkName);
+            $operation->setUserContext($userContext);
             return new TransactionResult($operation);
         }
 

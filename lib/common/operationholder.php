@@ -331,18 +331,15 @@ class OperationHolder implements OperationHolderInterface
 
     /**
      * @param string|null $serviceName
-     * @return Iterator
      */
     public function commit()
     {
         $this->clearFinishedOperations();
         foreach ($this->getOperationList() as $operation) {
-            yield $operation->commit();
+            $operation->commit();
         }
 
         $this->clearFinishedOperations();
-
-        return new EmptyIterator();
     }
 
     public function flush()
