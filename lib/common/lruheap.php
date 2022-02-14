@@ -40,7 +40,7 @@ class LruHeap extends SplMinHeap
             return;
         }
 
-        if ($this->map[$value] instanceof LruItem) {
+        if (($this->map[$value] ?? null) instanceof LruItem) {
             $this->map[$value]->index = $this->index++;
             $this->resort();
             return;

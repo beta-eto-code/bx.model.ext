@@ -36,7 +36,7 @@ class StateModel extends ModelDecorator
      */
     private function initNewState($offset, $value, $prevValue = null)
     {
-        if (!($this->stateStorage[$offset] instanceof SplDoublyLinkedList)) {
+        if (!(($this->stateStorage[$offset] ?? null) instanceof SplDoublyLinkedList)) {
             $this->stateStorage[$offset] = new SplDoublyLinkedList();
             $this->stateStorage[$offset]->setIteratorMode(SplDoublyLinkedList::IT_MODE_LIFO);
             $this->stateStorage[$offset]->push($prevValue ?? $this->offsetGet($offset));
@@ -138,7 +138,7 @@ class StateModel extends ModelDecorator
      */
     public function offsetGetState($offset): ?SplDoublyLinkedList
     {
-        if ($this->stateStorage[$offset] instanceof SplDoublyLinkedList) {
+        if (($this->stateStorage[$offset] ?? null) instanceof SplDoublyLinkedList) {
             return $this->stateStorage[$offset];
         }
 

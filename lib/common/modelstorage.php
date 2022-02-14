@@ -66,7 +66,7 @@ class ModelStorage implements StorageInterface
      */
     public function add(string $key, $item)
     {
-        if (count($this->list) >= $this->limitCount) {
+        if (count($this->list ?? []) >= $this->limitCount) {
             $this->removeItem();
         }
 
