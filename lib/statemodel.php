@@ -152,7 +152,10 @@ class StateModel extends ModelDecorator
     {
         $resutl = [];
         foreach($this->stateStorage as $key => $state) {
-            $result[$key] = $state->top();
+            $value = $this->offsetGet($key);
+            if ($value !== $state->bottom()) {
+                $result[$key] = $value;
+            }
         }
 
         return $result;
