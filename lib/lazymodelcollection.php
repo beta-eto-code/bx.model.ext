@@ -16,15 +16,21 @@ use Traversable;
 
 class LazyModelCollection extends ModelCollection implements LoadableInterface, DecoratorInterface
 {
+    /**
+     * @var ReadableModelServiceInterface
+     */
     private $service;
+    /**
+     * @var string
+     */
     private $pkName;
     /**
-     * @var false
+     * @var bool
      */
     private $loaded;
 
     /**
-     * @param $list
+     * @param array $list
      * @param string $className
      * @param ReadableModelServiceInterface $service
      * @param string $pkName
@@ -41,7 +47,13 @@ class LazyModelCollection extends ModelCollection implements LoadableInterface, 
             if ($item instanceof $className || $item instanceof LazyModelInterface) {
                 $this->items->attach($item);
             } elseif (is_array($item) || $item instanceof Traversable) {
-                $this->items->attach(new $className($item));
+                if (class_exists($className)) {
+                    $model = new $className($item);
+                    /**
+                     * @psalm-suppress InvalidArgument
+                     */
+                    $this->items->attach($model);
+                }
             }
         }
     }
@@ -63,14 +75,19 @@ class LazyModelCollection extends ModelCollection implements LoadableInterface, 
     }
 
     /**
-     * @param $list
+     * @param array $list
      * @return ReadableCollectionInterface
      */
     protected function newCollection($list): ReadableCollectionInterface
     {
-        return new static($list, $this->className, $this->service, $this->pkName);
+        return new LazyModelCollection($list, $this->className, $this->service, $this->pkName);
     }
 
+    /**
+     * @param CollectionItemInterface $item
+     * @return void
+     * @psalm-suppress PossiblyInvalidMethodCall
+     */
     public function append(CollectionItemInterface $item)
     {
         if ($item instanceof LoadableInterface && !$item->isLoaded()) {

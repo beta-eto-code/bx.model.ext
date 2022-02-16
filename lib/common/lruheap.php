@@ -31,10 +31,10 @@ class LruHeap extends SplMinHeap
     }
 
     /**
-     * @param string $value
+     * @param string|null $value
      * @return void
      */
-    public function insert($value)
+    public function insert($value): void
     {
         if (!is_string($value) || empty($value)) {
             return;

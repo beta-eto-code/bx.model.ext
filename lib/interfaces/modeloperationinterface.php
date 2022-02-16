@@ -4,6 +4,7 @@ namespace Bx\Model\Ext\Interfaces;
 
 use Bx\Model\AbsOptimizedModel;
 use Bx\Model\Interfaces\CollectionItemInterface;
+use Bx\Model\Interfaces\ModelInterface;
 use Bx\Model\Interfaces\ModelServiceInterface;
 use Bx\Model\Interfaces\UserContextInterface;
 
@@ -35,9 +36,9 @@ interface ModelOperationInterface extends CollectionItemInterface, CommitableInt
     public function getPkValue();
 
     /**
-     * @return AbsOptimizedModel|null
+     * @return ModelInterface|null
      */
-    public function getModel(): ?AbsOptimizedModel;
+    public function getModel(): ?ModelInterface;
 
     /**
      * @return ModelServiceInterface

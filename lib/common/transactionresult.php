@@ -50,7 +50,9 @@ class TransactionResult extends Result implements CommitableInterface
         return $this->operation->isFinished() ? $this->operation->commit()->getErrorMessages() : [];
     }
 
-
+    /**
+     * @return void
+     */
     public function commit()
     {
         $this->operation->commit();

@@ -70,8 +70,7 @@ class LazyModelService extends ServiceDecorator
         }
 
         if (!($item instanceof LazyModelInterface)) {
-            $selectIsEmpty = empty($params['select']);
-            $item = new LazyModel($item[$this->pkName], $item, $this, $selectIsEmpty);
+            $item = new LazyModel($id, $item, $this, true);
         }
 
         return $item;

@@ -22,7 +22,7 @@ class StorageModelService extends ServiceDecorator
      */
     private $pkName;
     /**
-     * @var ModelStorage
+     * @var StorageInterface
      */
     private $storage;
 
@@ -83,7 +83,7 @@ class StorageModelService extends ServiceDecorator
 
         $model = $this->modelService->getById($id, $userContext);
         if ($model instanceof AbsOptimizedModel) {
-            $this->storage->add($id, $model);
+            $this->storage->add((string)$id, $model);
         }
 
         return $model;

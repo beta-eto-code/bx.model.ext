@@ -2,8 +2,10 @@
 
 namespace Bx\Model\Ext\Common;
 
+use Bitrix\Main\Error;
 use Bitrix\Main\Result;
 use Bx\Model\AbsOptimizedModel;
+use Bx\Model\Interfaces\ModelInterface;
 use Bx\Model\Ext\Interfaces\ModelOperationInterface;
 use Bx\Model\Interfaces\ModelServiceInterface;
 use Bx\Model\Interfaces\UserContextInterface;
@@ -19,7 +21,7 @@ final class ModelOperation implements ModelOperationInterface
      */
     private $operationType;
     /**
-     * @var AbsOptimizedModel
+     * @var ModelInterface|null
      */
     private $model;
     /**
@@ -39,10 +41,17 @@ final class ModelOperation implements ModelOperationInterface
      */
     private $userContext;
 
+    /**
+     * @param ModelServiceInterface $service
+     * @param string $operationType
+     * @param ModelInterface|null $model
+     * @param string $pkName
+     * @param mixed $pkValue
+     */
     private function __construct(
         ModelServiceInterface $service,
         string $operationType,
-        ?AbsOptimizedModel $model = null,
+        ?ModelInterface $model = null,
         string $pkName = 'ID',
         $pkValue = null
     ) {
@@ -55,12 +64,13 @@ final class ModelOperation implements ModelOperationInterface
     }
 
     /**
-     * @param AbsOptimizedModel $model
+     * @param ModelInterface $model
      * @param ModelServiceInterface $service
+     * @param string $pkName
      * @return ModelOperationInterface
      */
     public static function initCreateOperation(
-        AbsOptimizedModel $model,
+        ModelInterface $model,
         ModelServiceInterface $service,
         string $pkName
     ): ModelOperationInterface {
@@ -68,12 +78,13 @@ final class ModelOperation implements ModelOperationInterface
     }
 
     /**
-     * @param AbsOptimizedModel $model
+     * @param ModelInterface $model
      * @param ModelServiceInterface $service
+     * @param string $pkName
      * @return ModelOperationInterface
      */
     public static function initUpdateOperation(
-        AbsOptimizedModel $model,
+        ModelInterface $model,
         ModelServiceInterface $service,
         string $pkName
     ): ModelOperationInterface {
@@ -132,9 +143,9 @@ final class ModelOperation implements ModelOperationInterface
     }
 
     /**
-     * @return AbsOptimizedModel|null
+     * @return ModelInterface|AbsOptimizedModel|null
      */
-    public function getModel(): ?AbsOptimizedModel
+    public function getModel(): ?ModelInterface
     {
         return $this->model;
     }
@@ -162,7 +173,15 @@ final class ModelOperation implements ModelOperationInterface
                 ModelOperationInterface::UPDATE_OPERATION
             ])
         ) {
-            return $this->result = $this->modelService->save($this->model, $this->userContext);
+            $model = $this->getModel();
+            if (!$model instanceof AbsOptimizedModel) {
+                $result = new Result();
+                $result->addError(new Error('Invalid model instance'));
+
+                return $result;
+            }
+
+            return $this->result = $this->modelService->save($model, $this->userContext);
         }
 
         return $this->result = $this->modelService->delete($this->pkValue, $this->userContext);
@@ -175,7 +194,7 @@ final class ModelOperation implements ModelOperationInterface
      */
     public function assertValueByKey(string $key, $value): bool
     {
-        if ($this->model instanceof AbsOptimizedModel) {
+        if ($this->model instanceof ModelInterface) {
             return $this->model->assertValueByKey($key, $value);
         }
 
@@ -188,7 +207,7 @@ final class ModelOperation implements ModelOperationInterface
      */
     public function hasValueKey(string $key): bool
     {
-        if ($this->model instanceof AbsOptimizedModel) {
+        if ($this->model instanceof ModelInterface) {
             return $this->model->hasValueKey($key);
         }
 
@@ -201,7 +220,7 @@ final class ModelOperation implements ModelOperationInterface
      */
     public function getValueByKey(string $key)
     {
-        if ($this->model instanceof AbsOptimizedModel) {
+        if ($this->model instanceof ModelInterface) {
             return $this->model->getValueByKey($key);
         }
 
@@ -213,7 +232,7 @@ final class ModelOperation implements ModelOperationInterface
         return [
             'operation' => $this->operationType,
             'pk' => $this->pkValue,
-            'model' => $this->model instanceof AbsOptimizedModel ? $this->model->getApiModel() : null,
+            'model' => $this->model instanceof ModelInterface ? $this->model->getApiModel() : null,
         ];
     }
 }

@@ -10,12 +10,21 @@ use Exception;
 
 class LazyModel extends ModelDecorator implements LazyModelInterface
 {
+    /**
+     * @var ReadableModelServiceInterface
+     */
     private $service;
+    /**
+     * @var bool
+     */
     private $loaded;
+    /**
+     * @var mixed
+     */
     private $pkValue;
 
     /**
-     * @param $pkValue
+     * @param mixed $pkValue
      * @param AbsOptimizedModel $model
      * @param ReadableModelServiceInterface $service
      * @param bool $isLoaded
@@ -49,6 +58,10 @@ class LazyModel extends ModelDecorator implements LazyModelInterface
         return true;
     }
 
+    /**
+     * @param ModelInterface $model
+     * @return void
+     */
     public function loadFrom(ModelInterface $model)
     {
         foreach ($model as $key => $value) {

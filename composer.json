@@ -20,7 +20,8 @@
     },
     "scripts": {
         "cs": "phpcs --standard=PSR12 ./lib/",
-        "test": "phpunit"
+        "test": "phpunit",
+        "analyze": "psalm --show-info=true"
     },
     "require": {
         "beta/bx.model": "^1.0"
@@ -29,7 +30,8 @@
         "phpunit/phpunit": "^9.5",
         "beta/data.provider": "^1.2",
         "beta/bx.data.provider": "^1.4",
-        "squizlabs/php_codesniffer": "^3.6"
+        "squizlabs/php_codesniffer": "^3.6",
+        "vimeo/psalm": "^4.20"
     },
     "repositories": [
         {

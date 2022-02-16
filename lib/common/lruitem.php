@@ -16,6 +16,10 @@ class LruItem
      */
     public $data;
 
+    /**
+     * @param int $index
+     * @param mixed $data
+     */
     public function __construct(int $index, $data)
     {
         $this->index = $index;

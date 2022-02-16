@@ -32,6 +32,9 @@ class OperationHolder implements OperationHolderInterface
         $this->init();
     }
 
+    /**
+     * @return void
+     */
     private function init()
     {
         $this->crateOperations = [];
@@ -39,6 +42,12 @@ class OperationHolder implements OperationHolderInterface
         $this->removeOperations = [];
     }
 
+    /**
+     * @param ModelInterface $model
+     * @param ModelServiceInterface $service
+     * @param string $pkName
+     * @return ModelOperationInterface
+     */
     public function addOperationCreate(
         ModelInterface $model,
         ModelServiceInterface $service,
@@ -55,6 +64,12 @@ class OperationHolder implements OperationHolderInterface
         return $operation;
     }
 
+    /**
+     * @param ModelInterface $model
+     * @param ModelServiceInterface $service
+     * @param string $pkName
+     * @return ModelOperationInterface
+     */
     public function addOperationUpdate(
         ModelInterface $model,
         ModelServiceInterface $service,
@@ -71,6 +86,11 @@ class OperationHolder implements OperationHolderInterface
         return $operation;
     }
 
+    /**
+     * @param mixed $pkValue
+     * @param ModelServiceInterface $service
+     * @return ModelOperationInterface
+     */
     public function addOperationRemove($pkValue, ModelServiceInterface $service): ModelOperationInterface
     {
         $serviceClass = get_class(DataHelper::extractOriginalObject($service));
@@ -87,6 +107,7 @@ class OperationHolder implements OperationHolderInterface
     /**
      * @param string|null $serviceName
      * @return Iterator|ModelOperationInterface[]
+     * @psalm-suppress ImplementedReturnTypeMismatch,MismatchingDocblockReturnType
      */
     public function getCreateOperationList(?string $serviceName = null): Iterator
     {
@@ -108,6 +129,7 @@ class OperationHolder implements OperationHolderInterface
     /**
      * @param string|null $serviceName
      * @return Iterator|ModelOperationInterface[]
+     * @psalm-suppress ImplementedReturnTypeMismatch,MismatchingDocblockReturnType
      */
     public function getUpdateOperationList(?string $serviceName = null): Iterator
     {
@@ -129,6 +151,7 @@ class OperationHolder implements OperationHolderInterface
     /**
      * @param string|null $serviceName
      * @return Iterator|ModelOperationInterface[]
+     * @psalm-suppress ImplementedReturnTypeMismatch,MismatchingDocblockReturnType
      */
     public function getRemoveOperationList(?string $serviceName = null): Iterator
     {
@@ -179,6 +202,7 @@ class OperationHolder implements OperationHolderInterface
     /**
      * @param string|null $serviceName
      * @return Iterator|ModelOperationInterface[]
+     * @psalm-suppress ImplementedReturnTypeMismatch,MismatchingDocblockReturnType
      */
     public function getOperationList(?string $serviceName = null): Iterator
     {
@@ -217,12 +241,16 @@ class OperationHolder implements OperationHolderInterface
         return $emptyCollection;
     }
 
+    /**
+     * @return void
+     */
     private function actualizeCreateOperations()
     {
         foreach ($this->crateOperations as $serviceName => $collection) {
             $itemsForRemove = [];
             /**
              * @var CollectionInterface|ModelOperationInterface[] $collection
+             * @psalm-var CollectionInterface $collection
              */
             foreach ($collection as $operation) {
                 if ($operation->isFinished()) {
@@ -242,11 +270,17 @@ class OperationHolder implements OperationHolderInterface
         }
     }
 
+    /**
+     * @return void
+     */
     private function actualizeUpdateOperations()
     {
         foreach ($this->updateOperations as $serviceName => $collection) {
             $ids = [];
             $removeCollection = $this->getCollection($serviceName, ModelOperationInterface::REMOVE_OPERATION);
+            /**
+             * @psalm-suppress MissingClosureReturnType
+             */
             $idsRemoveOperations = $removeCollection->map(function (ModelOperationInterface $operation) {
                 return $operation->getPkValue();
             });
@@ -254,6 +288,7 @@ class OperationHolder implements OperationHolderInterface
             $itemsForRemove = [];
             /**
              * @var CollectionInterface|ModelOperationInterface[] $collection
+             * @psalm-var CollectionInterface $collection
              */
             foreach ($collection as $operation) {
                 if ($operation->isFinished()) {
@@ -280,6 +315,9 @@ class OperationHolder implements OperationHolderInterface
         }
     }
 
+    /**
+     * @return void
+     */
     private function actualizeRemoveOperations()
     {
         foreach ($this->removeOperations as $serviceName => $collection) {
@@ -287,6 +325,7 @@ class OperationHolder implements OperationHolderInterface
             $itemsForRemove = [];
             /**
              * @var CollectionInterface|ModelOperationInterface[] $collection
+             * @psalm-var CollectionInterface $collection
              */
             foreach ($collection as $operation) {
                 if ($operation->isFinished()) {
@@ -336,7 +375,7 @@ class OperationHolder implements OperationHolderInterface
     }
 
     /**
-     * @param string|null $serviceName
+     * @return void
      */
     public function commit()
     {

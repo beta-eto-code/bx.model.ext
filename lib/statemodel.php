@@ -6,6 +6,9 @@ use Bitrix\Main\ArgumentException;
 use Bitrix\Main\SystemException;
 use SplDoublyLinkedList;
 
+/**
+ * @psalm-suppress UndefinedDocblockClass
+ */
 class StateModel extends ModelDecorator
 {
     /**
@@ -14,8 +17,8 @@ class StateModel extends ModelDecorator
     private $stateStorage = [];
 
     /**
-     * @param $offset
-     * @param $value
+     * @param mixed $offset
+     * @param mixed $value
      * @return void
      * @throws ArgumentException
      * @throws SystemException
@@ -27,9 +30,9 @@ class StateModel extends ModelDecorator
     }
 
     /**
-     * @param $offset
-     * @param $value
-     * @param $prevValue
+     * @param mixed $offset
+     * @param mixed $value
+     * @param mixed $prevValue
      * @return void
      * @throws ArgumentException
      * @throws SystemException
@@ -47,7 +50,7 @@ class StateModel extends ModelDecorator
     }
 
     /**
-     * @param $offset
+     * @param mixed $offset
      * @return void
      * @throws ArgumentException
      * @throws SystemException
@@ -59,7 +62,7 @@ class StateModel extends ModelDecorator
     }
 
     /**
-     * @param $offset
+     * @param mixed $offset
      * @return void
      * @throws ArgumentException
      * @throws SystemException
@@ -78,7 +81,7 @@ class StateModel extends ModelDecorator
     }
 
     /**
-     * @param $offset
+     * @param mixed $offset
      * @return void
      * @throws ArgumentException
      * @throws SystemException
@@ -133,7 +136,7 @@ class StateModel extends ModelDecorator
     }
 
     /**
-     * @param $offset
+     * @param mixed $offset
      * @return SplDoublyLinkedList|null
      */
     public function offsetGetState($offset): ?SplDoublyLinkedList
@@ -162,9 +165,9 @@ class StateModel extends ModelDecorator
     }
 
     /**
-     * @param $method
-     * @param $args
-     * @return void
+     * @param string $method
+     * @param array $args
+     * @return mixed
      * @throws ArgumentException
      * @throws SystemException
      */

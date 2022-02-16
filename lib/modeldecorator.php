@@ -10,6 +10,9 @@ use Bx\Model\Ext\Interfaces\DecoratorInterface;
 use Bx\Model\Interfaces\ModelInterface;
 use Iterator;
 
+/**
+ * @psalm-suppress UndefinedDocblockClass
+ */
 abstract class ModelDecorator extends AbsOptimizedModel implements DecoratorInterface
 {
     /**
@@ -74,6 +77,7 @@ abstract class ModelDecorator extends AbsOptimizedModel implements DecoratorInte
      * @deprecated
      * @param string $key
      * @return boolean
+     * @psalm-suppress DeprecatedMethod
      */
     public function isFill(string $key): bool
     {
@@ -134,7 +138,7 @@ abstract class ModelDecorator extends AbsOptimizedModel implements DecoratorInte
      */
     private function getData(): array
     {
-        return $this->model->getData();
+        return iterator_to_array($this->model);
     }
 
     /**

@@ -31,6 +31,7 @@ class ModelStorage implements StorageInterface
         array $list = [],
         int $limitCount = 10000
     ) {
+        $this->list = [];
         $this->removeStrategy = $removeStrategy;
         $this->pkName = $pkName;
         $this->limitCount = $limitCount;
@@ -61,12 +62,12 @@ class ModelStorage implements StorageInterface
 
     /**
      * @param string $key
-     * @param ModelInterface $item
+     * @param mixed|ModelInterface $item
      * @return void
      */
     public function add(string $key, $item)
     {
-        if (count($this->list ?? []) >= $this->limitCount) {
+        if (count($this->list) >= $this->limitCount) {
             $this->removeItem();
         }
 
@@ -74,6 +75,9 @@ class ModelStorage implements StorageInterface
         $this->removeStrategy->touch($key);
     }
 
+    /**
+     * @return void
+     */
     private function removeItem()
     {
         $key = $this->removeStrategy->getKeyForRemove();

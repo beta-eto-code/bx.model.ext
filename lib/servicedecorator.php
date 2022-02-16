@@ -98,7 +98,8 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * @param array|null $filter
      * @param array|null $sort
      * @param int|null $limit
-     * @return DerivativeModelInterface[]|ModelCollectionInterface
+     * @return ModelCollectionInterface|DerivativeModelInterface[]
+     * @psalm-suppress MismatchingDocblockReturnType
      */
     public function getModelCollection(
         string $class,
@@ -106,6 +107,9 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
         array $sort = null,
         int $limit = null
     ): ModelCollectionInterface {
+        /**
+         * @psalm-suppress InvalidArgument
+         */
         return $this->modelService->getModelCollection($class, $filter, $sort, $limit);
     }
 

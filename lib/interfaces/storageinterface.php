@@ -6,7 +6,7 @@ interface StorageInterface
 {
     /**
      * @param string $key
-     * @param $item
+     * @param mixed $item
      * @return void
      */
     public function add(string $key, $item);
