@@ -99,7 +99,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * @param array|null $sort
      * @param int|null $limit
      * @return ModelCollectionInterface|DerivativeModelInterface[]
-     * @psalm-suppress MismatchingDocblockReturnType
+     * @psalm-suppress MismatchingDocblockReturnType,ImplementedParamTypeMismatch
      */
     public function getModelCollection(
         string $class,
