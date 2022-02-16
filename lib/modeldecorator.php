@@ -20,7 +20,8 @@ abstract class ModelDecorator extends AbsOptimizedModel implements DecoratorInte
     /**
      * @param AbsOptimizedModel $model
      */
-    public function __construct(AbsOptimizedModel $model) {
+    public function __construct(AbsOptimizedModel $model)
+    {
         $this->data = [];
         $this->model = $model;
     }

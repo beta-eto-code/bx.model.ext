@@ -70,7 +70,7 @@ class StateModel extends ModelDecorator
         if (empty($state)) {
             return;
         }
-        
+
         if ($state->key() > 0) {
             $state->next();
             parent::offsetSet($offset, $state->current());
@@ -89,7 +89,7 @@ class StateModel extends ModelDecorator
         if (empty($state)) {
             return;
         }
-        
+
         if ($state->key() < ($state->count() - 1)) {
             $state->prev();
             parent::offsetSet($offset, $state->current());
@@ -104,7 +104,7 @@ class StateModel extends ModelDecorator
     public function loadOriginalState()
     {
         foreach ($this->stateStorage as $offset => $state) {
-            while($state->key() > 0) {
+            while ($state->key() > 0) {
                 $this->loadPrevState($offset);
             }
         }
@@ -118,7 +118,7 @@ class StateModel extends ModelDecorator
     public function loadLastState()
     {
         foreach ($this->stateStorage as $offset => $state) {
-            while($state->key() < ($state->count() - 1)) {
+            while ($state->key() < ($state->count() - 1)) {
                 $this->loadNextState($offset);
             }
         }
@@ -151,7 +151,7 @@ class StateModel extends ModelDecorator
     public function getChangesData(): array
     {
         $result = [];
-        foreach($this->stateStorage as $key => $state) {
+        foreach ($this->stateStorage as $key => $state) {
             $value = $this->offsetGet($key);
             if ($value !== $state->bottom()) {
                 $result[$key] = $value;

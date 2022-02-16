@@ -26,8 +26,8 @@ class TransactionModelService extends ServiceDecorator
     private $pkName;
 
     public function __construct(
-        OperationHolderInterface $operationHolder, 
-        ReadableModelServiceInterface $service, 
+        OperationHolderInterface $operationHolder,
+        ReadableModelServiceInterface $service,
         string $modelClass,
         string $pkName = 'ID'
     ) {
@@ -41,7 +41,7 @@ class TransactionModelService extends ServiceDecorator
     {
         $newCollection = new ModelCollection([], $this->modelClass);
         $collection = $this->modelService->getList($params, $userContext);
-        foreach($collection as $item) {
+        foreach ($collection as $item) {
             if (!($item instanceof StateModel)) {
                 $item = new StateModel($item);
             }
@@ -88,7 +88,7 @@ class TransactionModelService extends ServiceDecorator
             $operation = $this->operationHolder->addOperationCreate($model, $this->modelService, $this->pkName);
             $operation->setUserContext($userContext);
             return new TransactionResult($operation);
-        } else if($model->isChanged()) {
+        } elseif ($model->isChanged()) {
             $operation = $this->operationHolder->addOperationUpdate($model, $this->modelService, $this->pkName);
             $operation->setUserContext($userContext);
             return new TransactionResult($operation);

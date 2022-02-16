@@ -40,7 +40,7 @@ class LazyModelCollection extends ModelCollection implements LoadableInterface, 
         foreach ($list as $item) {
             if ($item instanceof $className || $item instanceof LazyModelInterface) {
                 $this->items->attach($item);
-            } elseif(is_array($item) || $item instanceof Traversable) {
+            } elseif (is_array($item) || $item instanceof Traversable) {
                 $this->items->attach(new $className($item));
             }
         }
@@ -133,7 +133,7 @@ class LazyModelCollection extends ModelCollection implements LoadableInterface, 
     public function getApiModel(): array
     {
         $result = [];
-        foreach($this as $item) {
+        foreach ($this as $item) {
             $result[] = $item->jsonSerialize();
         }
 

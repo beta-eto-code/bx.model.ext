@@ -8,9 +8,17 @@ use Iterator;
 
 interface OperationHolderInterface extends CommitableInterface
 {
-    public function addOperationCreate(ModelInterface $model, ModelServiceInterface $service, string $pkName): ModelOperationInterface;
+    public function addOperationCreate(
+        ModelInterface $model,
+        ModelServiceInterface $service,
+        string $pkName
+    ): ModelOperationInterface;
 
-    public function addOperationUpdate(ModelInterface $model, ModelServiceInterface $service, string $pkName): ModelOperationInterface;
+    public function addOperationUpdate(
+        ModelInterface $model,
+        ModelServiceInterface $service,
+        string $pkName
+    ): ModelOperationInterface;
 
     public function addOperationRemove($pkValue, ModelServiceInterface $service): ModelOperationInterface;
 

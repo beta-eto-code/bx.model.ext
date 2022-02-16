@@ -5,6 +5,7 @@ namespace Bx\Model\Ext;
 use Bitrix\Main\Result;
 use Bx\Model\AbsOptimizedModel;
 use Bx\Model\Ext\Interfaces\DecoratorInterface;
+use Bx\Model\Interfaces\DerivativeModelInterface;
 use Bx\Model\Interfaces\ModelCollectionInterface;
 use Bx\Model\Interfaces\ModelQueryInterface;
 use Bx\Model\Interfaces\Models\QueryableModelServiceInterface;
@@ -43,6 +44,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * Получаем построить запроса
      * @param UserContextInterface|null $userContext
      * @return ModelQueryInterface
+     * @throws Exception
      */
     public function query(UserContextInterface $userContext = null): ModelQueryInterface
     {
@@ -51,7 +53,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
         }
 
         if (method_exists($this->modelService, '__call')) {
-            return $this->modelService->__call('query', $userContext);
+            return $this->modelService->__call('query', [$userContext]);
         }
 
         throw new Exception('Not implemented!');
@@ -92,21 +94,27 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
 
     /**
      * Получаем коллекцию производных моделей
-     * @param DerivativeModelInterface $class
-     * @param array $filter
-     * @param array $sort
-     * @param int $limit
+     * @param string $class
+     * @param array|null $filter
+     * @param array|null $sort
+     * @param int|null $limit
      * @return DerivativeModelInterface[]|ModelCollectionInterface
      */
-    public function getModelCollection(string $class, array $filter = null, array $sort = null, int $limit = null): ModelCollectionInterface
-    {
-        return $this->modelService->getModelCollection((string)$class, $filter, $sort, $limit);
+    public function getModelCollection(
+        string $class,
+        array $filter = null,
+        array $sort = null,
+        int $limit = null
+    ): ModelCollectionInterface {
+        return $this->modelService->getModelCollection($class, $filter, $sort, $limit);
     }
 
     /**
-     * Проверяет разрешено ли фитьтровать элементы по указаному полю (используется в построителе запроса ModelQueryInterface)
+     * Проверяет разрешено ли фитьтровать элементы по указаному полю
+     * (используется в построителе запроса ModelQueryInterface)
      * @param string $fieldName
      * @return bool
+     * @throws Exception
      */
     public function allowForFilter(string $fieldName): bool
     {
@@ -115,7 +123,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
         }
 
         if (method_exists($this->modelService, '__call')) {
-            return $this->modelService->__call('allowForFilter', $fieldName);
+            return $this->modelService->__call('allowForFilter', [$fieldName]);
         }
 
         throw new Exception('Not implemented!');
@@ -125,6 +133,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * Возвращает фильтр собранный из переданных данных (используется в построителе запросов ModelQueryInterface)
      * @param array $params
      * @return array
+     * @throws Exception
      */
     public function getFilter(array $params): array
     {
@@ -143,6 +152,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * Проверяет разрешено ли сортировать по указанному полю (используется в построителе запроса ModelQueryInterface)
      * @param string $fieldName
      * @return bool
+     * @throws Exception
      */
     public function allowForSort(string $fieldName): bool
     {
@@ -161,6 +171,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * Возвращает правило сортировки из переданных данных (используется в построителе запроса ModelQueryInterface)
      * @param array $params
      * @return array
+     * @throws Exception
      */
     public function getSort(array $params): array
     {
@@ -179,6 +190,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * Возвращает значение максимального количества элементов выводимого на странице
      * @param array $params
      * @return int
+     * @throws Exception
      */
     public function getLimit(array $params): int
     {
@@ -197,6 +209,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * Возвращает номер текущей страницы
      * @param array $params
      * @return int
+     * @throws Exception
      */
     public function getPage(array $params): int
     {
@@ -216,6 +229,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * @param AbsOptimizedModel $model
      * @param UserContextInterface|null $userContext
      * @return mixed
+     * @throws Exception
      */
     public function save(AbsOptimizedModel $model, UserContextInterface $userContext = null): Result
     {
@@ -236,6 +250,7 @@ abstract class ServiceDecorator implements ModelServiceInterface, DecoratorInter
      * @param int $id
      * @param UserContextInterface|null $userContext
      * @return mixed
+     * @throws Exception
      */
     public function delete(int $id, UserContextInterface $userContext = null): Result
     {

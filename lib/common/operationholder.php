@@ -39,8 +39,11 @@ class OperationHolder implements OperationHolderInterface
         $this->removeOperations = [];
     }
 
-    public function addOperationCreate(ModelInterface $model, ModelServiceInterface $service, string $pkName): ModelOperationInterface
-    {
+    public function addOperationCreate(
+        ModelInterface $model,
+        ModelServiceInterface $service,
+        string $pkName
+    ): ModelOperationInterface {
         $serviceClass = get_class(DataHelper::extractOriginalObject($service));
         if (empty($this->crateOperations[$serviceClass])) {
             $this->crateOperations[$serviceClass] = new Collection();
@@ -52,8 +55,11 @@ class OperationHolder implements OperationHolderInterface
         return $operation;
     }
 
-    public function addOperationUpdate(ModelInterface $model, ModelServiceInterface $service, string $pkName): ModelOperationInterface
-    {
+    public function addOperationUpdate(
+        ModelInterface $model,
+        ModelServiceInterface $service,
+        string $pkName
+    ): ModelOperationInterface {
         $serviceClass = get_class(DataHelper::extractOriginalObject($service));
         if (empty($this->updateOperations[$serviceClass])) {
             $this->updateOperations[$serviceClass] = new Collection();
@@ -89,8 +95,8 @@ class OperationHolder implements OperationHolderInterface
         }
 
         if (empty($serviceName)) {
-            foreach($this->crateOperations as $serviceList) {
-                foreach($serviceList as $operation) {
+            foreach ($this->crateOperations as $serviceList) {
+                foreach ($serviceList as $operation) {
                     yield $operation;
                 }
             }
@@ -110,8 +116,8 @@ class OperationHolder implements OperationHolderInterface
         }
 
         if (empty($serviceName)) {
-            foreach($this->updateOperations as $serviceList) {
-                foreach($serviceList as $operation) {
+            foreach ($this->updateOperations as $serviceList) {
+                foreach ($serviceList as $operation) {
                     yield $operation;
                 }
             }
@@ -131,8 +137,8 @@ class OperationHolder implements OperationHolderInterface
         }
 
         if (empty($serviceName)) {
-            foreach($this->removeOperations as $serviceList) {
-                foreach($serviceList as $operation) {
+            foreach ($this->removeOperations as $serviceList) {
+                foreach ($serviceList as $operation) {
                     yield $operation;
                 }
             }
@@ -150,23 +156,23 @@ class OperationHolder implements OperationHolderInterface
         $operationType = $operation->getOperationType();
         $serviceClass = get_class(DataHelper::extractOriginalObject($operation->getService()));
         if ($operationType === ModelOperationInterface::CREATE_OPERATION) {
-            return $this->crateOperations[$serviceClass] instanceof CollectionInterface ? 
-                $this->crateOperations[$serviceClass] : 
+            return $this->crateOperations[$serviceClass] instanceof CollectionInterface ?
+                $this->crateOperations[$serviceClass] :
                 new Collection();
         }
 
         if ($operationType === ModelOperationInterface::UPDATE_OPERATION) {
-            return $this->updateOperations[$serviceClass] instanceof CollectionInterface ? 
-                $this->updateOperations[$serviceClass] : 
+            return $this->updateOperations[$serviceClass] instanceof CollectionInterface ?
+                $this->updateOperations[$serviceClass] :
                 new Collection();
         }
 
         if ($operationType === ModelOperationInterface::REMOVE_OPERATION) {
-            return $this->removeOperations[$serviceClass] instanceof CollectionInterface ? 
-                $this->removeOperations[$serviceClass] : 
+            return $this->removeOperations[$serviceClass] instanceof CollectionInterface ?
+                $this->removeOperations[$serviceClass] :
                 new Collection();
         }
-    
+
         return new Collection();
     }
 
@@ -176,15 +182,15 @@ class OperationHolder implements OperationHolderInterface
      */
     public function getOperationList(?string $serviceName = null): Iterator
     {
-        foreach($this->getCreateOperationList($serviceName) as $operation) {
+        foreach ($this->getCreateOperationList($serviceName) as $operation) {
             yield $operation;
         }
 
-        foreach($this->getUpdateOperationList($serviceName) as $operation) {
+        foreach ($this->getUpdateOperationList($serviceName) as $operation) {
             yield $operation;
         }
 
-        foreach($this->getRemoveOperationList($serviceName) as $operation) {
+        foreach ($this->getRemoveOperationList($serviceName) as $operation) {
             yield $operation;
         }
 
@@ -199,7 +205,7 @@ class OperationHolder implements OperationHolderInterface
     private function getCollection(string $serviceName, string $operationType): CollectionInterface
     {
         $emptyCollection = new Collection();
-        switch($operationType) {
+        switch ($operationType) {
             case ModelOperationInterface::CREATE_OPERATION:
                 return $this->crateOperations[$serviceName] ?? $emptyCollection;
             case ModelOperationInterface::UPDATE_OPERATION:
@@ -213,12 +219,12 @@ class OperationHolder implements OperationHolderInterface
 
     private function actualizeCreateOperations()
     {
-        foreach($this->crateOperations as $serviceName => $collection) {
+        foreach ($this->crateOperations as $serviceName => $collection) {
             $itemsForRemove = [];
             /**
              * @var CollectionInterface|ModelOperationInterface[] $collection
              */
-            foreach($collection as $operation) {
+            foreach ($collection as $operation) {
                 if ($operation->isFinished()) {
                     $itemsForRemove[] = $operation;
                     continue;
@@ -230,7 +236,7 @@ class OperationHolder implements OperationHolderInterface
                 }
             }
 
-            foreach($itemsForRemove as $operation) {
+            foreach ($itemsForRemove as $operation) {
                 $collection->remove($operation);
             }
         }
@@ -238,10 +244,10 @@ class OperationHolder implements OperationHolderInterface
 
     private function actualizeUpdateOperations()
     {
-        foreach($this->updateOperations as $serviceName => $collection) {
+        foreach ($this->updateOperations as $serviceName => $collection) {
             $ids = [];
             $removeCollection = $this->getCollection($serviceName, ModelOperationInterface::REMOVE_OPERATION);
-            $idsRemoveOperations = $removeCollection->map(function(ModelOperationInterface $operation) {
+            $idsRemoveOperations = $removeCollection->map(function (ModelOperationInterface $operation) {
                 return $operation->getPkValue();
             });
 
@@ -249,7 +255,7 @@ class OperationHolder implements OperationHolderInterface
             /**
              * @var CollectionInterface|ModelOperationInterface[] $collection
              */
-            foreach($collection as $operation) {
+            foreach ($collection as $operation) {
                 if ($operation->isFinished()) {
                     $itemsForRemove[] = $operation;
                     continue;
@@ -260,7 +266,7 @@ class OperationHolder implements OperationHolderInterface
                     $itemsForRemove[] = $operation;
                     continue;
                 }
-                
+
                 if (in_array($pkValue, $idsRemoveOperations) || in_array($pkValue, $ids)) {
                     $itemsForRemove[] = $operation;
                     continue;
@@ -268,7 +274,7 @@ class OperationHolder implements OperationHolderInterface
                 $ids[] = $pkValue;
             }
 
-            foreach($itemsForRemove as $operation) {
+            foreach ($itemsForRemove as $operation) {
                 $collection->remove($operation);
             }
         }
@@ -276,13 +282,13 @@ class OperationHolder implements OperationHolderInterface
 
     private function actualizeRemoveOperations()
     {
-        foreach($this->removeOperations as $serviceName => $collection) {
+        foreach ($this->removeOperations as $serviceName => $collection) {
             $ids = [];
             $itemsForRemove = [];
             /**
              * @var CollectionInterface|ModelOperationInterface[] $collection
              */
-            foreach($collection as $operation) {
+            foreach ($collection as $operation) {
                 if ($operation->isFinished()) {
                     $itemsForRemove[] = $operation;
                     continue;
@@ -295,7 +301,7 @@ class OperationHolder implements OperationHolderInterface
                 $ids[] = $operation->getPkValue();
             }
 
-            foreach($itemsForRemove as $operation) {
+            foreach ($itemsForRemove as $operation) {
                 $collection->remove($operation);
             }
         }
@@ -324,7 +330,7 @@ class OperationHolder implements OperationHolderInterface
             }
         }
 
-        foreach($operationForRemove as $operation) {
+        foreach ($operationForRemove as $operation) {
             $this->getCollectionByOperation($operation)->remove($operation);
         }
     }

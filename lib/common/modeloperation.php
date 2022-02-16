@@ -8,7 +8,7 @@ use Bx\Model\Ext\Interfaces\ModelOperationInterface;
 use Bx\Model\Interfaces\ModelServiceInterface;
 use Bx\Model\Interfaces\UserContextInterface;
 
-class ModelOperation implements ModelOperationInterface
+final class ModelOperation implements ModelOperationInterface
 {
     /**
      * @var ModelServiceInterface
@@ -40,9 +40,9 @@ class ModelOperation implements ModelOperationInterface
     private $userContext;
 
     private function __construct(
-        ModelServiceInterface $service, 
-        string $operationType, 
-        ?AbsOptimizedModel $model = null, 
+        ModelServiceInterface $service,
+        string $operationType,
+        ?AbsOptimizedModel $model = null,
         string $pkName = 'ID',
         $pkValue = null
     ) {
@@ -60,7 +60,7 @@ class ModelOperation implements ModelOperationInterface
      * @return ModelOperationInterface
      */
     public static function initCreateOperation(
-        AbsOptimizedModel $model, 
+        AbsOptimizedModel $model,
         ModelServiceInterface $service,
         string $pkName
     ): ModelOperationInterface {
@@ -73,7 +73,7 @@ class ModelOperation implements ModelOperationInterface
      * @return ModelOperationInterface
      */
     public static function initUpdateOperation(
-        AbsOptimizedModel $model, 
+        AbsOptimizedModel $model,
         ModelServiceInterface $service,
         string $pkName
     ): ModelOperationInterface {
@@ -89,7 +89,13 @@ class ModelOperation implements ModelOperationInterface
         $pkValue,
         ModelServiceInterface $service
     ): ModelOperationInterface {
-        return new static($service, ModelOperationInterface::REMOVE_OPERATION, null, '', $pkValue);
+        return new static(
+            $service,
+            ModelOperationInterface::REMOVE_OPERATION,
+            null,
+            '',
+            $pkValue
+        );
     }
 
     public function setUserContext(?UserContextInterface $userContext)
@@ -150,7 +156,12 @@ class ModelOperation implements ModelOperationInterface
             return $this->result;
         }
 
-        if (in_array($this->operationType, [ModelOperationInterface::CREATE_OPERATION, ModelOperationInterface::UPDATE_OPERATION])) {
+        if (
+            in_array($this->operationType, [
+                ModelOperationInterface::CREATE_OPERATION,
+                ModelOperationInterface::UPDATE_OPERATION
+            ])
+        ) {
             return $this->result = $this->modelService->save($this->model, $this->userContext);
         }
 

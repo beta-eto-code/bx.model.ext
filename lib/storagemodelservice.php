@@ -77,12 +77,12 @@ class StorageModelService extends ServiceDecorator
     public function getById(int $id, UserContextInterface $userContext = null): ?AbsOptimizedModel
     {
         $storageItem = $this->storage->get((string)$id);
-        if ($storageItem instanceof ModelInterface) {
+        if ($storageItem instanceof AbsOptimizedModel) {
             return $storageItem;
         }
 
         $model = $this->modelService->getById($id, $userContext);
-        if ($model instanceof ModelInterface) {
+        if ($model instanceof AbsOptimizedModel) {
             $this->storage->add($id, $model);
         }
 
